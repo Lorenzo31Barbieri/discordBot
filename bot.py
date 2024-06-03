@@ -20,7 +20,7 @@ async def on_message(message):
         if len(message.content) > 4:
             count_heh = int(message.content[4:])
         else:
-            count_heh = 5
+            count_heh = 10
         await message.channel.send("he" * count_heh)
     elif message.content.startswith("$password"):
         n = message.content[9:]
