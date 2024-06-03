@@ -1,22 +1,29 @@
 import discord
-
-from discord.ext import commands
+from bot_logic import gen_pass
 
 intents = discord.Intents.default()
 intents.message_content = True
 
-bot = commands.Bot(command_prefix='$', intents=intents)
+client = discord.Client(intents=intents)
 
-@bot.event
+@client.event
 async def on_ready():
-    print(f"Hai fatto l\\'accesso come {bot.user}")
+    print(f"Hai fatto l\\'accesso come {client.user}")
 
-@bot.command()
-async def ciao(ctx):
-    await ctx.send(f'Ciao! Sono un bot {bot.user}!')
-
-@bot.command()
-async def heh(ctx, count_heh = 5):
-    await ctx.send("he" * count_heh)
-
-bot.run("MY_TOKEN")
+@client.event
+async def on_message(message):
+    if message.author == client.user:
+        return
+    if message.content.startswith('$ciao'):
+        await message.channel.send(f'Ciao! Io sono un bot{client.user}!')
+    elif  message.content.startswith('$heh'):
+        if len(message.content) > 4:
+            count_heh = int(message.content[4:])
+        else:
+            count_heh = 5
+        await message.channel.send("he" * count_heh)
+    elif message.content.startswith("$password"):
+        n = message.content[9:]
+        await message.channel.send(gen_pass(n))
+        
+client.run("IL TOKEN SEGRETO VA QUI")
